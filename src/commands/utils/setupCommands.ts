@@ -34,11 +34,50 @@ export const data = new SlashCommandBuilder()
             .setName('youtube')
             .setDescription('Setup youtube tracking.')
     )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName('server')
+            .setDescription('Setup server connection with the bot.')
+    )
 
 export async function run({ interaction, client, handler }: SlashCommandProps) {
     const subsubcommand = interaction.options.getSubcommand(false);
 
     switch (subsubcommand) {
+        case 'server':
+            console.log(client.user?.avatarURL({ extension: 'png' }))
+            if (!interaction.guildId) {
+                interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+                return;
+            }
+
+            const serverSetupModal = new ModalBuilder()
+                .setCustomId('serverSetup')
+                .setTitle('Server Setup');
+
+            const serverIpInput = new TextInputBuilder()
+                .setCustomId('serverIp')
+                .setLabel('Server IP:Port')
+                .setPlaceholder('Server IP:Port')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true);
+
+            const serverAPIKeyInput = new TextInputBuilder()
+                .setCustomId('APIKey')
+                .setLabel('Server API Key')
+                .setPlaceholder('Server API Key')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true);
+
+            const serverIpInputActionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(serverIpInput);
+            const serverAPIKeyInputActionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(serverAPIKeyInput);
+
+            serverSetupModal.addComponents(serverIpInputActionRow, serverAPIKeyInputActionRow);
+
+            await interaction.showModal(serverSetupModal);
+
+            console.log(`Server setup modal for guild ${interaction.guildId} opened. Command run by "${interaction.user.displayName}"`);
+            break;
         case 'youtube':
             if (!interaction.guildId) {
                 interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
@@ -150,5 +189,6 @@ export async function run({ interaction, client, handler }: SlashCommandProps) {
 }
  
 export const options = { 
-    permissions: ['ADMINISTRATOR']
+    permissions: ['Administrator'],
+    botPermissions: ['ManageWebhooks']
 }

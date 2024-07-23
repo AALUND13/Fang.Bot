@@ -260,3 +260,4 @@ dist
 .pnp.*
 
 logfile.log
+src/database.json

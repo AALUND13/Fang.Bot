@@ -13,18 +13,8 @@ Todo:
   - [x] A setup command for the bot utils
   - [x] A setup command for the yootube tracker
 
-- [] Server:
+- [x] Server:
  - [x] Server on the torch server
-
- - [] Send commands to server from discord
-  - [x] Start/Stop/Restart server
-  - [x] Promote/Demote players
-  - [] Add/Remove mods
-  - [] List/Add/Remove torch plugins
-
-  - [] Setup roles permissions to use server admin commands
-   
-
 
  - [x] Server tracking on bot profile
   - [x] Track the server is offline or online
@@ -39,4 +29,4 @@ Todo:
   - [x] Track the server sim speed
   - [x] Track server uptime
 
- - [] A setup command for the server
+ - [x] A setup command for the server

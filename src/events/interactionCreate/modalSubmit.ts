@@ -3,12 +3,68 @@ import { isValidHexColor } from "../../utils/ColorUtli";
 import { getDatabaseData, writeToDatabase } from "utilities";
 import { clamp } from "../../utils/MathUtli";
 import { YouTubeChannelData, YoutubeDataStatus } from "../../Handler/YouTubeDataHandler";
+import { validateIpAndPort } from "../../utils/WebUtli";
+import axios from "axios";
 
 export default async (interaction: Interaction) => {
     if (!interaction.isModalSubmit()) return;
     console.log('Modal submit event executed.');
 
     switch (interaction.customId) {
+        case 'serverSetup':
+            const serverIPAndPort = interaction.fields.getField('serverIp').value;
+            const APIKey = interaction.fields.getField('APIKey').value;
+
+            // Check if the IP and port is valid
+            if (!validateIpAndPort(serverIPAndPort)) {
+                await interaction.reply({ content: 'Invalid IP and port.', ephemeral: true });
+                return;
+            } 
+
+            // Check if get a '200' response from the server
+            try {
+                await axios.get(`http://${serverIPAndPort}/api/v1/`);
+            } catch (error) {
+                await interaction.reply({ content: 'Failed to connect to the server.', ephemeral: true });
+                return;
+            }
+
+            // If is vaild, validate the API key
+            const validateAPIKeyResponse = await axios.get(`http://${serverIPAndPort}/api/v1/vaildate/apikey?APIKey=${APIKey}`).then(res => res.data).catch(() => null); 
+            if (!validateAPIKeyResponse) {
+                await interaction.reply({ content: 'Invalid API key.', ephemeral: true });
+                return;
+            }
+
+            // If all is valid, write to the database
+            writeToDatabase(['guilds', interaction.guildId!, 'data', 'server', 'serverIPAndPort'], serverIPAndPort);
+            writeToDatabase(['guilds', interaction.guildId!, 'data', 'server', 'APIKey'], APIKey);
+
+            const noTrackOnProfile = Object.keys(getDatabaseData(['guilds'])).some(guildId => {
+                const guildData = getDatabaseData(['guilds', guildId]);
+                return guildData?.data?.server?.trackOnProfile ?? false;
+            });
+            
+            if (!noTrackOnProfile) {
+                writeToDatabase(['guilds', interaction.guildId!, 'data', 'server', 'trackOnProfile'], true);
+            }
+
+            const serverChannelSelect = new ChannelSelectMenuBuilder()
+                .setCustomId('serverChannel')
+                .setPlaceholder('Select a channel to track')
+                .setMaxValues(1)
+                .addChannelTypes(ChannelType.GuildText);
+
+            const channelActionRow = new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(serverChannelSelect);
+
+            const serverEmbed = new EmbedBuilder()
+                .setTitle('Server Setup')
+                .setDescription(`Server setup completed. Add a channel to track.`)
+                .setColor(getDatabaseData(['guilds', interaction.guildId!, 'data', 'embedColor']) ?? '#D1E44C');
+
+            await interaction.reply({ embeds: [serverEmbed], components: [channelActionRow], fetchReply: true });
+            console.log(`Server setup for guild ${interaction.guildId} completed.`);
+            break;
         case 'youtubeSetup':
             const youtubeChannelId = interaction.fields.getField('youtubeChannelId').value;
             const youtubeAnnouncementMessage = interaction.fields.getField('youtubeAnnouncementMessage').value;
@@ -22,13 +78,13 @@ export default async (interaction: Interaction) => {
             }
 
             
-            const channelSelect = new ChannelSelectMenuBuilder()
+            const ytChannelSelect = new ChannelSelectMenuBuilder()
                 .setCustomId('videoAnnouncementChannel')
                 .setPlaceholder('Select a video announcement channel')
                 .setMaxValues(1)
                 .addChannelTypes(ChannelType.GuildText)
                 
-            const channelActionRow = new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(channelSelect);
+            const ytChannelRow = new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(ytChannelSelect);
             
             const embed = new EmbedBuilder()
                 .setTitle('Youtube Channel Tracking Setup')
@@ -38,7 +94,7 @@ export default async (interaction: Interaction) => {
             writeToDatabase(['guilds', interaction.guildId!, 'data', 'youtubeChannelId'], youtubeChannelId);
             writeToDatabase(['guilds', interaction.guildId!, 'data', 'youtubeChannelAnnouncementText'], youtubeAnnouncementMessage);
 
-            await interaction.reply({ embeds: [embed], components: [channelActionRow], fetchReply: true });
+            await interaction.reply({ embeds: [embed], components: [ytChannelRow], fetchReply: true });
 
             console.log(`Bot YouTubr tracker setup for guild ${interaction.guildId} completed.`);
             break

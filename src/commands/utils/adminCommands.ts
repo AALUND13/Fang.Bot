@@ -61,119 +61,119 @@ export const data = new SlashCommandBuilder()
             )
         )
     )
-    .addSubcommandGroup((subCommandGroup) =>
-        subCommandGroup
-            .setName('server')
-            .setDescription('Admin commands for the server.')
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('start')
-                    .setDescription('Start the server.')
-            )
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('stop')
-                    .setDescription('Stop the server.')
-            )
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('restart')
-                    .setDescription('Restart the server.')
-            )
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('promote-player')
-                    .setDescription('Promote a player.')
-                    .addStringOption((option) =>
-                        option
-                            .setName('player')
-                            .setDescription('The player to promote.')
-                            .setRequired(true)
-                    )
-            )
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('demote-player')
-                    .setDescription('Demote a player.')
-                    .addStringOption((option) =>
-                        option
-                            .setName('player')
-                            .setDescription('The player to promote.')
-                            .setRequired(true)
-                    )
-            )
-        )
+    // .addSubcommandGroup((subCommandGroup) =>
+    //     subCommandGroup
+    //         .setName('server')
+    //         .setDescription('Admin commands for the server.')
+    //         .addSubcommand((subcommand) =>
+    //             subcommand
+    //                 .setName('start')
+    //                 .setDescription('Start the server.')
+    //         )
+    //         .addSubcommand((subcommand) =>
+    //             subcommand
+    //                 .setName('stop')
+    //                 .setDescription('Stop the server.')
+    //         )
+    //         .addSubcommand((subcommand) =>
+    //             subcommand
+    //                 .setName('restart')
+    //                 .setDescription('Restart the server.')
+    //         )
+    //         .addSubcommand((subcommand) =>
+    //             subcommand
+    //                 .setName('promote-player')
+    //                 .setDescription('Promote a player.')
+    //                 .addStringOption((option) =>
+    //                     option
+    //                         .setName('player')
+    //                         .setDescription('The player to promote.')
+    //                         .setRequired(true)
+    //                 )
+    //         )
+    //         .addSubcommand((subcommand) =>
+    //             subcommand
+    //                 .setName('demote-player')
+    //                 .setDescription('Demote a player.')
+    //                 .addStringOption((option) =>
+    //                     option
+    //                         .setName('player')
+    //                         .setDescription('The player to promote.')
+    //                         .setRequired(true)
+    //                 )
+    //         )
+    //     )
 
 export async function run({ interaction, client, handler }: SlashCommandProps) {
     const subCommandGroup = interaction.options.getSubcommandGroup(false);
     const subsubcommand = interaction.options.getSubcommand(false);
 
     switch (subCommandGroup) {
-        case 'server':
-            if (!interaction.guildId) {
-                interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
-                return;
-            } else if (getDatabaseData(['guilds', interaction.guildId, 'data', 'server']) === undefined) {
-                interaction.reply({ content: 'Server data is not set up.', ephemeral: true });
-                return;
-            }
-            const guildDataServer = getDatabaseData(['guilds', interaction.guildId, 'data', 'server']);
+        // case 'server':
+        //     if (!interaction.guildId) {
+        //         interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+        //         return;
+        //     } else if (getDatabaseData(['guilds', interaction.guildId, 'data', 'server']) === undefined) {
+        //         interaction.reply({ content: 'Server data is not set up.', ephemeral: true });
+        //         return;
+        //     }
+        //     const guildDataServer = getDatabaseData(['guilds', interaction.guildId, 'data', 'server']);
 
-            switch (subsubcommand) {
+        //     switch (subsubcommand) {
 
-                case 'start':
-                    axios.get(`http://${guildDataServer.serverIPAndPort}/api/v1/server/start?APIKey=${guildDataServer.APIKey}`)
-                    .then(() => {
-                        interaction.reply({ content: 'Server is starting...', ephemeral: true });
-                    })
-                    .catch((error: AxiosError) => {
-                        interaction.reply({ content: error.response?.data as string ?? 'Failed to start the server.', ephemeral: true });
-                    });                
-                    break;
-                case 'stop':
-                    axios.get(`http://${guildDataServer.serverIPAndPort}/api/v1/server/stop?APIKey=${guildDataServer.APIKey}`)
-                    .then(() => {
-                        interaction.reply({ content: 'Server is shutting down...', ephemeral: true });
-                    })
-                    .catch((error: AxiosError) => {
-                        interaction.reply({ content: error.response?.data as string ?? 'Failed to stop the server.', ephemeral: true });
-                    });     
-                    break;
-                case 'restart':
-                    axios.get(`http://${guildDataServer.serverIPAndPort}/api/v1/server/restart?APIKey=${guildDataServer.APIKey}&Delay=10`)
-                    .then(() => {
-                        interaction.reply({ content: 'Server is restarting...', ephemeral: true });
-                    })
-                    .catch((error: AxiosError) => {
-                        interaction.reply({ content: error.response?.data as string ?? 'Failed to restart the server.', ephemeral: true });
-                    });
-                    break;
-                case 'promote-player':
-                    const playerRankChangePromote = await promotePlayer(interaction.guildId, interaction.options.getString('player')!);
-                    if (!playerRankChangePromote) {
-                        interaction.reply({ content: 'Failed to promote the player.', ephemeral: true });
-                        return;
-                    } else if (playerRankChangePromote.ChangeType === RankChangeType.SameRank) {
-                        interaction.reply({ content: `Player **${playerRankChangePromote?.PlayerName}** is already at the highest rank.`, ephemeral: true });
-                        return;
-                    }
+        //         case 'start':
+        //             axios.get(`http://${guildDataServer.serverIPAndPort}/api/v1/server/start?APIKey=${guildDataServer.APIKey}`)
+        //             .then(() => {
+        //                 interaction.reply({ content: 'Server is starting...', ephemeral: true });
+        //             })
+        //             .catch((error: AxiosError) => {
+        //                 interaction.reply({ content: error.response?.data as string ?? 'Failed to start the server.', ephemeral: true });
+        //             });                
+        //             break;
+        //         case 'stop':
+        //             axios.get(`http://${guildDataServer.serverIPAndPort}/api/v1/server/stop?APIKey=${guildDataServer.APIKey}`)
+        //             .then(() => {
+        //                 interaction.reply({ content: 'Server is shutting down...', ephemeral: true });
+        //             })
+        //             .catch((error: AxiosError) => {
+        //                 interaction.reply({ content: error.response?.data as string ?? 'Failed to stop the server.', ephemeral: true });
+        //             });     
+        //             break;
+        //         case 'restart':
+        //             axios.get(`http://${guildDataServer.serverIPAndPort}/api/v1/server/restart?APIKey=${guildDataServer.APIKey}&Delay=10`)
+        //             .then(() => {
+        //                 interaction.reply({ content: 'Server is restarting...', ephemeral: true });
+        //             })
+        //             .catch((error: AxiosError) => {
+        //                 interaction.reply({ content: error.response?.data as string ?? 'Failed to restart the server.', ephemeral: true });
+        //             });
+        //             break;
+        //         case 'promote-player':
+        //             const playerRankChangePromote = await promotePlayer(interaction.guildId, interaction.options.getString('player')!);
+        //             if (!playerRankChangePromote) {
+        //                 interaction.reply({ content: 'Failed to promote the player.', ephemeral: true });
+        //                 return;
+        //             } else if (playerRankChangePromote.ChangeType === RankChangeType.SameRank) {
+        //                 interaction.reply({ content: `Player **${playerRankChangePromote?.PlayerName}** is already at the highest rank.`, ephemeral: true });
+        //                 return;
+        //             }
 
-                    interaction.reply({ content: `Player **${playerRankChangePromote.PlayerName}** has been promoted from **${getStringPromoteLevel(playerRankChangePromote.OldRank)}** to **${getStringPromoteLevel(playerRankChangePromote.NewRank)}**`, ephemeral: true });
-                    break;
-                case 'demote-player':
-                    const playerRankChangeDemote = await demotePlayer(interaction.guildId, interaction.options.getString('player')!);
-                    if (!playerRankChangeDemote) {
-                        interaction.reply({ content: 'Failed to demote the player.', ephemeral: true });
-                        return;
-                    } else if (playerRankChangeDemote.ChangeType === RankChangeType.SameRank) {
-                        interaction.reply({ content: `Player **${playerRankChangeDemote?.PlayerName}** is already at the lowest rank.`, ephemeral: true });
-                        return;
-                    }
+        //             interaction.reply({ content: `Player **${playerRankChangePromote.PlayerName}** has been promoted from **${getStringPromoteLevel(playerRankChangePromote.OldRank)}** to **${getStringPromoteLevel(playerRankChangePromote.NewRank)}**`, ephemeral: true });
+        //             break;
+        //         case 'demote-player':
+        //             const playerRankChangeDemote = await demotePlayer(interaction.guildId, interaction.options.getString('player')!);
+        //             if (!playerRankChangeDemote) {
+        //                 interaction.reply({ content: 'Failed to demote the player.', ephemeral: true });
+        //                 return;
+        //             } else if (playerRankChangeDemote.ChangeType === RankChangeType.SameRank) {
+        //                 interaction.reply({ content: `Player **${playerRankChangeDemote?.PlayerName}** is already at the lowest rank.`, ephemeral: true });
+        //                 return;
+        //             }
                     
-                    interaction.reply({ content: `Player **${playerRankChangeDemote.PlayerName}** has been demoted from **${getStringPromoteLevel(playerRankChangeDemote.OldRank)}** to **${getStringPromoteLevel(playerRankChangeDemote.NewRank)}**`, ephemeral: true });
-                    break;
-            }
-            break;
+        //             interaction.reply({ content: `Player **${playerRankChangeDemote.PlayerName}** has been demoted from **${getStringPromoteLevel(playerRankChangeDemote.OldRank)}** to **${getStringPromoteLevel(playerRankChangeDemote.NewRank)}**`, ephemeral: true });
+        //             break;
+        //     }
+        //     break;
         case 'points':
             if (!interaction.guildId) {
                 interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
@@ -209,5 +209,5 @@ export async function run({ interaction, client, handler }: SlashCommandProps) {
 }
 
 export const options = { 
-    Permissions: ['ADMINISTRATOR']
+    Permissions: ['Administrator']
 }

@@ -1,4 +1,0 @@
-[2024-07-23 14:23:21.907]: Bot is starting...
-[2024-07-23 14:23:24.395]: Fang.Bot [Dev]#4792 is online!
-[2024-07-23 14:23:24.517]: ✅ Loaded 1 developer commands in guild "test server 1".
-[2024-07-23 14:23:24.788]: ✅ Loaded 7 global commands.

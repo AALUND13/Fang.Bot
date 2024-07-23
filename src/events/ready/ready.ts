@@ -57,8 +57,9 @@ async function fetchAndUpdateYouTubeData(youtubeChannelData: YouTubeChannelInfo[
 }
 
 async function fetchAndUpdateServerStatus(client: Client<true>) {
-    const guilds = getDatabaseData(['guilds']);
-    const guildsWithServerData = Object.keys(guilds).filter(guildID => guilds[guildID].data.server.serverIPAndPort || guilds[guildID].data.server.trackOnProfile);
+    const guilds = getDatabaseData(['guilds']) ?? {};
+    const guildsWithServerData = Object.keys(guilds).filter(guildID => guilds[guildID]?.data?.server?.serverIPAndPort || guilds[guildID]?.data?.server?.trackOnProfile);
+    if (guildsWithServerData.length === 0) return;
     const serverStatus = await getServerStatus(guildsWithServerData[0]);
 
     let statusMessage = 'Server status not available';
@@ -72,6 +73,7 @@ export default async (client: Client<true>) => {
     let youtubeChannelData: YouTubeChannelInfo[] = fetchYouTubeChannelsGuildsData(process.env.YOUTUBE_API_KEY!, client);
 
     await fetchAndUpdateYouTubeData(youtubeChannelData, client);
+    await fetchAndUpdateServerStatus(client);
 
     setInterval(async () => {
         await fetchAndUpdateServerStatus(client);
