@@ -1,0 +1,94 @@
+{
+  "guilds": {
+    "721236290938601542": {
+      "data": {
+        "points": {
+          "pointsCooldown": 15,
+          "pointsMultiplier": 10,
+          "pointsFromWordle": 0,
+          "wordleCooldown": 12
+        },
+        "server": {
+          "serverIPAndPort": "127.0.0.1:9860",
+          "APIKey": "V3jVGzqwQtB0LW64LUdAnU4W5ytvUusvJYgqFWCOLOjIqi6ANpjjZozb9x1ig5Mw",
+          "trackingChannelID": "808758565241225308",
+          "trackOnProfile": true
+        },
+        "embedColor": "#D1E44C"
+      },
+      "members": {
+        "429810730691461130": {
+          "wordle": {
+            "wordleData": {
+              "maxAttempts": 6,
+              "generatedWord": "large",
+              "attempts": 2,
+              "guessedWord": [
+                [
+                  {
+                    "character": "o",
+                    "state": 1
+                  },
+                  {
+                    "character": "f",
+                    "state": 1
+                  },
+                  {
+                    "character": "t",
+                    "state": 1
+                  },
+                  {
+                    "character": "e",
+                    "state": 0
+                  },
+                  {
+                    "character": "n",
+                    "state": 1
+                  }
+                ],
+                [
+                  {
+                    "character": "l",
+                    "state": 0
+                  },
+                  {
+                    "character": "a",
+                    "state": 0
+                  },
+                  {
+                    "character": "r",
+                    "state": 0
+                  },
+                  {
+                    "character": "g",
+                    "state": 0
+                  },
+                  {
+                    "character": "e",
+                    "state": 0
+                  }
+                ]
+              ],
+              "ended": true,
+              "wonGame": true
+            },
+            "timeToReset": 1721079698580,
+            "lastChannelID": "808759803626258442",
+            "lastMessageID": "1262343345917919242"
+          },
+          "points": 42,
+          "pointsCooldown": 1721744129617
+        },
+        "689608178669060152": {
+          "pointsCooldown": 1721744291271,
+          "points": 120
+        }
+      }
+    }
+  },
+  "videoData": {
+    "UCazYirNTIn4dJB6jf86gJQg": {
+      "lastVideoID": "ktivkDdPOWo"
+    }
+  }
+}
