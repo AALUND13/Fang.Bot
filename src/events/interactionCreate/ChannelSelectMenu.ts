@@ -10,7 +10,8 @@ export default async (interaction: Interaction) => {
     switch (interaction.customId) {
         case 'serverChannel':
             if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
-                await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+                await interaction.followUp({ content: 'You do not have permission to use this command.', ephemeral: true });
+                return;
             }
 
             const selectedChannelId = interaction.values[0];
@@ -59,7 +60,8 @@ export default async (interaction: Interaction) => {
             break;
         case 'videoAnnouncementChannel':
             if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
-                await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+                await interaction.followUp({ content: 'You do not have permission to use this command.', ephemeral: true });
+                return;
             }
 
             const channelId = interaction.values[0];
